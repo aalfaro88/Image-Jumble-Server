@@ -5,7 +5,6 @@ const router = express.Router();
 const Project = require('../models/Project');
 const isAuthenticated = require('../middleware/isAuthenticated');
 
-// Route to create a new project
 router.post('/', isAuthenticated, async (req, res) => {
   console.log('Received request to create a project:', req.body);
   try {
@@ -71,7 +70,6 @@ router.put('/:projectId', isAuthenticated, async (req, res) => {
   }
 });
 
-// Route to delete a project by ID
 router.delete('/:projectId', isAuthenticated, async (req, res) => {
   try {
     const { projectId } = req.params;

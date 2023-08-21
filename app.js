@@ -11,6 +11,7 @@ var cors = require('cors');
 var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth');
 var projectRoutes = require('./routes/projectRoutes');
+var pathRoutes = require('./routes/pathRoutes');
 var layerRoutes = require('./routes/layerRoutes');
 var imageRoutes = require('./routes/imageRoutes');
 var randomizeRoutes = require('./routes/randomizeRoutes')
@@ -43,7 +44,8 @@ app.use(cors())
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/projects', projectRoutes);
-app.use('/projects/:projectId/layers', layerRoutes);
+app.use('/projects/:projectId/paths', pathRoutes);
+app.use('/projects/:projectId/paths/:pathId/layers', layerRoutes);
 app.use('/', imageRoutes); 
 app.use('/', randomizeRoutes);
 app.use("/delete-cloudinary-folder", deleteCloudinaryFolderRoute);

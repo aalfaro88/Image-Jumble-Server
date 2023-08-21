@@ -14,27 +14,39 @@ const storage = new CloudinaryStorage({
   cloudinary,
   params: (req, file) => {
     const projectId = req.params.projectId;
+    const pathId = req.params.pathId;
     const layerId = req.params.layerId;
-    const filename = file.originalname.replace(/\.[^/.]+$/, ""); 
+    const filename = file.originalname.replace(/\.[^/.]+$/, "");
 
     console.log("Project ID:", projectId);
+    console.log("Path ID:", pathId);
     console.log("Layer ID:", layerId);
     console.log("Image Name:", file.originalname);
 
-    const folder = `Image-randomizer/${projectId}/${layerId}`;
+    const folder = `image-jumble/${projectId}/${pathId}/${layerId}`;
 
+    const format = (() => {
+      if (file.mimetype === "image/png") {
+        return "png";
+      } else if (file.mimetype === "image/gif") {
+        return "gif";
+      } else if (file.mimetype === "image/webp") {
+        return "webp";
+      }
+      return "png";
+    })();
 
     const imageUrl = cloudinary.url(filename, {
       public_id: `${folder}/${filename}`,
-      format: "png",
-      secure: true, 
+      format: format,
+      secure: true,
     });
 
-    console.log("Image URL:", imageUrl); 
+    console.log("Image URL:", imageUrl);
 
     return {
       folder,
-      format: "png",
+      format,
       public_id: filename,
       access_mode: "public",
     };

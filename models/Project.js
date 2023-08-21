@@ -1,7 +1,7 @@
 // server/models/Project.js
-
 const mongoose = require('mongoose');
-const Layer = require('./Layer'); 
+const Layer = require('./Layer');
+const Path = require('./Path'); // Add this line
 
 const projectSchema = new mongoose.Schema(
   {
@@ -14,12 +14,17 @@ const projectSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
-    layers: {
-      type: [Layer.schema], 
+    paths: {
+      type: [Path.schema],
       default: [
         {
-          name: 'Background',
-          images: [],
+          name: 'Path 1',
+          layers: [
+            {
+              name: 'Background',
+              images: [],
+            },
+          ],
         },
       ],
     },
