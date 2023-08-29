@@ -101,4 +101,48 @@ router.put('/:pathId', isAuthenticated, async (req, res) => {
     }
   });
 
+//   router.post('/:pathId/clone', isAuthenticated, async (req, res) => {
+//     try {
+//       const { projectId, pathId } = req.params;
+  
+//       const project = await Project.findById(projectId);
+//       if (!project) {
+//         return res.status(404).json({ message: 'Project not found.' });
+//       }
+  
+//       const sourcePath = project.paths.find(path => path._id.toString() === pathId);
+//       if (!sourcePath) {
+//         return res.status(404).json({ message: 'Source path not found.' });
+//       }
+  
+//       // Clone the source path and its layers
+//       const clonedPath = {
+//         name: `${sourcePath.name} - Clone`,
+//         layers: [],
+//       };
+  
+//       for (const sourceLayer of sourcePath.layers) {
+//         const clonedLayer = {
+//           name: sourceLayer.name,
+//           images: [...sourceLayer.images], // Clone images array
+//         };
+//         clonedPath.layers.push(clonedLayer);
+//       }
+  
+//       project.paths.push(clonedPath);
+//       await project.save();
+  
+//       res.status(201).json(clonedPath);
+//     } catch (error) {
+//       res.status(500).json({ message: 'Error cloning path.', error });
+//     }
+//   });
+  
+  module.exports = router;
+
+
+
+
+
+
 module.exports = router;

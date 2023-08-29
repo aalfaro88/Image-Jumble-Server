@@ -104,5 +104,4 @@ router.get('/images/:projectId/:pathId/:layerId', async (req, res) => {
   }
 });
 
-
 module.exports = router;
