@@ -17,8 +17,6 @@ var imageRoutes = require('./routes/imageRoutes');
 var randomizeRoutes = require('./routes/randomizeRoutes')
 var deleteCloudinaryFolderRoute = require("./routes/deleteCloudinaryFolder");
 var paymentRoutes = require('./routes/paymentRoutes');
-var matrixRoutes = require('./routes/matrixRoutes')
-
 
 
 var app = express();
@@ -50,7 +48,11 @@ app.use('/', imageRoutes);
 app.use('/', randomizeRoutes);
 app.use("/delete-cloudinary-folder", deleteCloudinaryFolderRoute);
 app.use('/', paymentRoutes); 
-app.use('/',matrixRoutes);
+
+app.all('*', (req, res) => {
+  console.log(`Incoming request: ${req.method} ${req.url}`);
+  res.status(404).send('Not found');
+});
 
 
 mongoose

@@ -23,10 +23,10 @@ router.post("/upload-image/:projectId/:pathId/:layerId/", uploadImg.array("pictu
   return res.status(201).json({ urls });
 });
 
-
 router.post('/projects/:projectId/paths/:pathId/layers/:layerId/images', isAuthenticated, async (req, res) => {
   try {
     const names = req.body.names;
+    const rarities = req.body.rarities;
     const projectId = req.params.projectId;
     const pathId = req.params.pathId;
     const layerId = req.params.layerId;
@@ -36,6 +36,7 @@ router.post('/projects/:projectId/paths/:pathId/layers/:layerId/images', isAuthe
     console.log('Received LayerID:', layerId);
     console.log('Received image names:', names);
 
+    // Fetch the project, path, and layer
     const projectToUpdate = await Project.findById(projectId);
     if (!projectToUpdate) {
       return res.status(404).json({ msg: 'Project not found.' });
@@ -51,7 +52,12 @@ router.post('/projects/:projectId/paths/:pathId/layers/:layerId/images', isAuthe
       return res.status(404).json({ msg: 'Layer not found.' });
     }
 
-    targetLayer.images.push(...names);
+    const imagesToAdd = names.map((name, i) => ({
+      name: name,
+      rarity: rarities[i],
+    }));
+
+    targetLayer.images.push(...imagesToAdd);
     await projectToUpdate.save();
 
     res.status(201).json(projectToUpdate);
@@ -101,6 +107,41 @@ router.get('/images/:projectId/:pathId/:layerId', async (req, res) => {
     res.json(images);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch images.', error });
+  }
+});
+
+router.put('/projects/:projectId/paths/:pathId/layers/:layerId/images/:imageId/rarity', isAuthenticated, async (req, res) => {
+  try {
+    const { projectId, pathId, layerId, imageId } = req.params;
+    const newRarity = req.body.newRarity;
+
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ msg: 'Project not found.' });
+    }
+
+    const targetPath = project.paths.find(path => path._id.toString() === pathId);
+    if (!targetPath) {
+      return res.status(404).json({ msg: 'Path not found.' });
+    }
+
+    const targetLayer = targetPath.layers.find(layer => layer._id.toString() === layerId);
+    if (!targetLayer) {
+      return res.status(404).json({ msg: 'Layer not found.' });
+    }
+
+    const targetImage = targetLayer.images.find(image => image._id.toString() === imageId);
+    if (!targetImage) {
+      return res.status(404).json({ msg: 'Image not found.' });
+    }
+
+    targetImage.rarity = newRarity;
+    await project.save();
+
+    res.status(200).json({ msg: 'Successfully updated rarity.', updatedImage: targetImage });
+  } catch (error) {
+    console.error('Error updating rarity:', error);
+    res.status(500).json({ msg: 'Failed to update rarity.' });
   }
 });
 

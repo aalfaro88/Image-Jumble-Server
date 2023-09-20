@@ -27,18 +27,19 @@ const storage = new CloudinaryStorage({
 
     const format = (() => {
       if (file.mimetype === "image/png") {
-        return "png";
+        return "webp";
       } else if (file.mimetype === "image/gif") {
         return "gif";
       } else if (file.mimetype === "image/webp") {
         return "webp";
       }
-      return "png";
+      return "webp";
     })();
 
+    // Construct an image URL with the f_auto parameter for automatic WebP conversion
     const imageUrl = cloudinary.url(filename, {
       public_id: `${folder}/${filename}`,
-      format: format,
+      format: "auto", // Use "auto" for automatic format selection by Cloudinary
       secure: true,
     });
 
@@ -64,4 +65,5 @@ const deleteCloudinaryFolder = async (folderPath) => {
 
 const uploadImg = multer({ storage });
 
-module.exports = { uploadImg, deleteCloudinaryFolder};
+module.exports = { uploadImg, deleteCloudinaryFolder };
+

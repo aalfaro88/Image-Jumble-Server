@@ -44,6 +44,12 @@ const isAuthenticated = require('../middleware/isAuthenticated');
 //   }
 // });
 
+// Define a default image with name "None" and rarity 0
+const defaultImage = {
+  name: 'None',
+  rarity: 0,
+};
+
 router.post('/', isAuthenticated, async (req, res) => { 
   try {
     const projectId = req.params.projectId; 
@@ -64,7 +70,7 @@ router.post('/', isAuthenticated, async (req, res) => {
 
     const newLayer = {
       name,
-      images: images || [],
+      images: images && images.length > 0 ? images : [defaultImage], // Add default image if images array is empty or not supplied
     };
 
     targetPath.layers.push(newLayer); // Push the new layer to the target path
@@ -81,6 +87,7 @@ router.post('/', isAuthenticated, async (req, res) => {
     res.status(500).json({ message: 'Error creating layer.', error });
   }
 });
+
 
 router.delete('/:layerId', isAuthenticated, async (req, res) => {
   try {
